@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../widgets/my_text_form_field.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key, required this.onTap});
 
@@ -29,6 +31,11 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Icon(
+            Icons.message,
+            size: 60,
+            color: Theme.of(context).colorScheme.primary,
+          ),
           const Padding(
             padding: EdgeInsets.only(top: 30.0, bottom: 40),
             child: Center(
@@ -46,59 +53,21 @@ class _LoginScreenState extends State<LoginScreen> {
             key: _formkey,
             child: Column(
               children: [
-                TextFormField(
+                MyTextFormField(
                   controller: _email,
-                  autocorrect: false,
                   keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Enter your email";
-                    } else {
-                      return null;
-                    }
-                  },
-                  decoration: InputDecoration(
-                    hintText: "Enter your email here",
-                    filled: true,
-                    fillColor: Colors.red.shade50,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
+                  errorMessage: "Enter your email",
+                  hintText: "Enter your Email address",
                 ),
                 const SizedBox(
                   height: 10,
                 ),
-                TextFormField(
+                MyTextFormField(
                   controller: _password,
-                  obscureText: isSelectionOn,
-                  enableSuggestions: false,
-                  autocorrect: false,
                   keyboardType: TextInputType.visiblePassword,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Enter a Password";
-                    } else {
-                      return null;
-                    }
-                  },
-                  decoration: InputDecoration(
-                      hintText: "Enter your password",
-                      filled: true,
-                      fillColor: Colors.red.shade50,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      suffixIcon: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            isSelectionOn = !isSelectionOn;
-                          });
-                        },
-                        child: Icon(isSelectionOn
-                            ? CupertinoIcons.eye_slash_fill
-                            : CupertinoIcons.eye_fill),
-                      )),
+                  errorMessage: "Enter your password",
+                  hintText: "Enter your password",
+                  isPasswordField: true,
                 ),
               ],
             ),

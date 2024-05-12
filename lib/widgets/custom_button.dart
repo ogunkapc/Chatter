@@ -26,7 +26,9 @@ class CustomButton extends StatelessWidget {
           style: TextButton.styleFrom(backgroundColor: btnColor ?? Colors.red),
           onPressed: submit ??
               () => Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => nextPage!)),
+                    context,
+                    MaterialPageRoute(builder: (context) => nextPage!),
+                  ),
           // onPressed: (){
           //   Navigator.push(context, MaterialPageRoute(builder: (context)=>   summit ?? Placeholder()));
           // },
