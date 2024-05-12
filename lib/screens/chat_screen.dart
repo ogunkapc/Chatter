@@ -46,9 +46,6 @@ class _ChatScreenState extends State<ChatScreen> {
             Text("Hi ${loggedInUser!.displayName}")
           ],
         ),
-        actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert))
-        ],
       ),
     );
   }

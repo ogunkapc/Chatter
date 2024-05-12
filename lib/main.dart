@@ -1,5 +1,7 @@
 import 'package:chatter/services/auth/auth_gate.dart';
 import 'package:chatter/firebase_options.dart';
+import 'package:chatter/theme/dark_mode.dart';
+import 'package:chatter/theme/light_mode.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -18,11 +20,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: lightMode,
+      darkTheme: darkMode,
       home: const AuthGate(),
     );
   }
