@@ -1,11 +1,8 @@
-import 'package:chatter/screens/chat_screen.dart';
 import 'package:chatter/services/auth/auth_service.dart';
 import 'package:chatter/widgets/custom_button.dart';
+import 'package:chatter/widgets/my_text_form_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../../widgets/my_text_form_field.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key, required this.onTap});
@@ -23,7 +20,36 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isSelectionOn = true;
 
   final _formkey = GlobalKey<FormState>();
-  final AuthService _authService = AuthService();
+
+  void login() {
+    // get auth service
+    final AuthService authService = AuthService();
+
+    final email = _email.text;
+    final password = _password.text;
+
+    if (_formkey.currentState!.validate()) {
+      try {
+        authService.signInWithEmailAndPassword(email, password);
+
+        showModalBottomSheet(
+          context: context,
+          builder: (context) => Container(
+            padding: const EdgeInsets.all(24),
+            child: Text("welcome ${authService.getcurrentUser()!.displayName}"),
+          ),
+        );
+      } on FirebaseAuthException catch (e) {
+        showModalBottomSheet(
+          context: context,
+          builder: (context) => Container(
+            padding: const EdgeInsets.all(24),
+            child: Text(e.code),
+          ),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,42 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
           const SizedBox(
             height: 30,
           ),
-          CustomButton(
-            buttonLabel: "Login",
-            submit: () async {
-              final email = _email.text;
-              final password = _password.text;
-              if (_formkey.currentState!.validate()) {
-                try {
-                  _authService.signInWithEmailAndPassword(email, password);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const ChatScreen()),
-                  );
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (context) => Container(
-                      padding: const EdgeInsets.all(24),
-                      child: Text(
-                          "welcome ${_authService.currentUser?.displayName}"),
-                    ),
-                  );
-                } on FirebaseAuthException catch (e) {
-                  print(e.runtimeType);
-                  print(e);
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (context) => Container(
-                      padding: const EdgeInsets.all(24),
-                      child: Text(e.code),
-                    ),
-                  );
-                }
-              } else {
-                print("Error!!!");
-              }
-            },
-          ),
+          CustomButton(buttonLabel: "Login", submit: login),
           const SizedBox(
             height: 15,
           ),

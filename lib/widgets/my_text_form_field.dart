@@ -5,14 +5,14 @@ class MyTextFormField extends StatefulWidget {
   const MyTextFormField({
     super.key,
     required this.controller,
-    required this.keyboardType,
+    this.keyboardType,
     required this.errorMessage,
     required this.hintText,
     this.isPasswordField = false,
   });
 
   final TextEditingController controller;
-  final TextInputType keyboardType;
+  final TextInputType? keyboardType;
   final String errorMessage;
   final String hintText;
   final bool isPasswordField;
@@ -53,17 +53,17 @@ class _MyTextFormFieldState extends State<MyTextFormField> {
           borderRadius: BorderRadius.circular(20),
         ),
         suffixIcon: widget.isPasswordField
-        ? GestureDetector(
-          onTap: () {
-            setState(() {
-              obscureText = !obscureText;
-            });
-          },
-          child: Icon(obscureText
-              ? CupertinoIcons.eye_slash_fill
-              : CupertinoIcons.eye_fill),
-        )
-        : null,
+            ? GestureDetector(
+                onTap: () {
+                  setState(() {
+                    obscureText = !obscureText;
+                  });
+                },
+                child: Icon(obscureText
+                    ? CupertinoIcons.eye_slash_fill
+                    : CupertinoIcons.eye_fill),
+              )
+            : null,
       ),
     );
   }

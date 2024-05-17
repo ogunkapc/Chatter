@@ -1,8 +1,7 @@
-import 'package:chatter/screens/auth/login_or_register.dart';
 import 'package:chatter/services/auth/auth_service.dart';
 import 'package:chatter/widgets/custom_button.dart';
+import 'package:chatter/widgets/my_text_form_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -22,7 +21,36 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _password = TextEditingController();
   final TextEditingController _firstName = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  final AuthService _authService = AuthService();
+
+  void register() {
+    final AuthService _authService = AuthService();
+
+    final email = _email.text;
+    final password = _password.text;
+    final firstName = _firstName.text;
+
+    if (_formKey.currentState!.validate()) {
+      try {
+        _authService.registerWithEmailAndPassword(email, password, firstName);
+        
+        showModalBottomSheet(
+          context: context,
+          builder: (context) => Container(
+            padding: const EdgeInsets.all(24),
+            child: const Text("Registration Successful"),
+          ),
+        );
+      } on FirebaseAuthException catch (e) {
+        showModalBottomSheet(
+          context: context,
+          builder: (context) => Container(
+            padding: const EdgeInsets.all(24),
+            child: Text(e.code),
+          ),
+        );
+      }
+    }
+  }
 
   bool isSelectionOn = true;
 
@@ -47,117 +75,36 @@ class _RegisterScreenState extends State<RegisterScreen> {
           key: _formKey,
           child: Column(
             children: [
-              TextFormField(
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Enter your first name";
-                  } else {
-                    return null;
-                  }
-                },
+              MyTextFormField(
                 controller: _firstName,
-                decoration: InputDecoration(
-                  hintText: "Enter your first name",
-                  filled: true,
-                  fillColor: Colors.red.shade50,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
+                errorMessage: "Enter first name",
+                hintText: "Enter your first name",
               ),
               const SizedBox(
                 height: 10,
               ),
-              TextFormField(
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Enter your email";
-                  } else {
-                    return null;
-                  }
-                },
+              MyTextFormField(
                 controller: _email,
                 keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  hintText: "Enter your email",
-                  filled: true,
-                  fillColor: Colors.red.shade50,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
+                errorMessage: "Enter your email",
+                hintText: "Enter your email address",
               ),
               const SizedBox(
                 height: 10,
               ),
-              TextFormField(
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Enter a Password";
-                  } else {
-                    return null;
-                  }
-                },
+              MyTextFormField(
                 controller: _password,
-                obscureText: true,
-                decoration: InputDecoration(
-                    hintText: "Enter a Password",
-                    filled: true,
-                    fillColor: Colors.red.shade50,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    suffixIcon: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isSelectionOn = !isSelectionOn;
-                        });
-                      },
-                      child: Icon(isSelectionOn
-                          ? CupertinoIcons.eye_slash_fill
-                          : CupertinoIcons.eye_fill),
-                    )),
+                keyboardType: TextInputType.visiblePassword,
+                errorMessage: "Enter your password",
+                hintText: "Enter your your password",
+                isPasswordField: true,
               ),
               const SizedBox(
                 height: 10,
               ),
               CustomButton(
                 buttonLabel: "Register",
-                submit: () async {
-                  final email = _email.text;
-                  final password = _password.text;
-                  final firstName = _firstName.text;
-                  if (_formKey.currentState!.validate()) {
-                    try {
-                      _authService.registerWithEmailAndPassword(
-                          email, password, firstName);
-                      // _authService.sendEmailVerification();
-                      // navigate to verification screen
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const LoginOrRegister()),
-                      );
-                      showModalBottomSheet(
-                        context: context,
-                        builder: (context) => Container(
-                          padding: const EdgeInsets.all(24),
-                          child: const Text("Registration Successful"),
-                        ),
-                      );
-                    } on FirebaseAuthException catch (e) {
-                      // print(e.runtimeType);
-                      print(e);
-                      showModalBottomSheet(
-                        context: context,
-                        builder: (context) => Container(
-                          padding: const EdgeInsets.all(24),
-                          child: Text(e.code),
-                        ),
-                      );
-                    }
-                  }
-                },
+                submit: register,
               ),
               const SizedBox(
                 height: 15,
