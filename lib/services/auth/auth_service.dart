@@ -1,11 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
-  // initialise firebase auth
+  // firebase auth instance
   final FirebaseAuth _authInstance = FirebaseAuth.instance;
 
+  // firebase firestore instance
+  final FirebaseFirestore _firestoreInstance = FirebaseFirestore.instance;
+
   // get current user
-  User? get currentUser => _authInstance.currentUser;
+  User? getcurrentUser() => _authInstance.currentUser;
 
   // sign in with email and password
   Future<UserCredential> signInWithEmailAndPassword(
@@ -16,9 +20,15 @@ class AuthService {
         email: email,
         password: password,
       );
+
+      // save user info if it doesn't exist in separate doc
+      _firestoreInstance.collection("Users").doc(userCredential.user!.uid).set({
+        "uid": userCredential.user!.uid,
+        "email": email,
+      });
+
       return userCredential;
     } on FirebaseAuthException catch (e) {
-      print(e);
       throw Exception(e.code);
     }
   }
@@ -42,32 +52,21 @@ class AuthService {
         // Optionally, reload the user to ensure the display name is updated
         await user.reload();
         return userCredential;
-      } else {
-        print("User not found");
       }
+
+      // save user info in separate doc
+      _firestoreInstance.collection("Users").doc(userCredential.user!.uid).set({
+        "uid": userCredential.user!.uid,
+        "email": email,
+      });
 
       return userCredential;
     } on FirebaseAuthException catch (e) {
-      print(e);
       throw Exception(e.code);
     }
   }
 
-  // send email verification
-  // Future<void> sendEmailVerification() async {
-  //   try {
-  //     User? user = _authInstance.currentUser;
-  //     if (user != null && !user.emailVerified) {
-  //       await user.sendEmailVerification();
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //     throw Exception('Failed to send email verification');
-  //   }
-  // }
-
   // sign out
-
   Future<void> signOut() async {
     await _authInstance.signOut();
   }
