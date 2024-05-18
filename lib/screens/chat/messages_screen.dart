@@ -5,41 +5,25 @@ import 'package:chatter/widgets/user_tile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-User? loggedInUser;
-
 class MessagesScreen extends StatelessWidget {
   MessagesScreen({super.key});
 
   final AuthService _authService = AuthService();
-
   final ChatService _chatService = ChatService();
+
+  final User? loggedInUser = FirebaseAuth.instance.currentUser;
 
   void logout() {
     final AuthService authService = AuthService();
     authService.signOut();
   }
 
-  // @override
-  // void initState() {
-  //   super.initState();
-
-  //   getCurrentUser();
-  // }
-
-  // void getCurrentUser() {
-  //   try {
-  //     final user = _authService.currentUser;
-  //     if (user != null) {
-  //       loggedInUser = user;
-  //       print(loggedInUser?.email);
-  //     }
-  // } catch (e) {
-  //     print(e);
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
+    final String displayName = (loggedInUser?.displayName?.isNotEmpty == true)
+        ? loggedInUser!.displayName!
+        : 'User';
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -48,7 +32,7 @@ class MessagesScreen extends StatelessWidget {
             const SizedBox(
               width: 10,
             ),
-            Text("Hi ${loggedInUser!.displayName}")
+            Text("$displayName's Chats")
           ],
         ),
         actions: [
@@ -64,7 +48,9 @@ class MessagesScreen extends StatelessWidget {
       stream: _chatService.getUsersStream(),
       builder: (context, snapshot) {
         // if it has error
-        if (snapshot.hasError) {}
+        if (snapshot.hasError) {
+          return const Text("Error");
+        }
 
         // if it is loading
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -84,15 +70,16 @@ class MessagesScreen extends StatelessWidget {
       Map<String, dynamic> userData, BuildContext context) {
     // display all users except current user
     if (userData["email"] != _authService.getcurrentUser()!.email) {
+      final displayName = userData["firstname"] ?? userData["email"];
       return UserTile(
-        text: 'firstname',
+        text: displayName,
         onTap: () {
           // navigate to chat page
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => ChatScreen(
-                receivername: userData["firstname"],
+                receivername: displayName,
               ),
             ),
           );

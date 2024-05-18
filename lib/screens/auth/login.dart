@@ -21,7 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final _formkey = GlobalKey<FormState>();
 
-  void login() {
+  void login() async {
     // get auth service
     final AuthService authService = AuthService();
 
@@ -30,21 +30,33 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (_formkey.currentState!.validate()) {
       try {
-        authService.signInWithEmailAndPassword(email, password);
+        await authService.signInWithEmailAndPassword(email, password);
 
-        showModalBottomSheet(
-          context: context,
-          builder: (context) => Container(
-            padding: const EdgeInsets.all(24),
-            child: Text("welcome ${authService.getcurrentUser()!.displayName}"),
-          ),
-        );
+        final user = authService.getcurrentUser();
+
+        if (user != null) {
+          showModalBottomSheet(
+            context: context,
+            builder: (context) => Container(
+              padding: const EdgeInsets.all(24),
+              child: Text("welcome ${user.displayName ?? user.email}"),
+            ),
+          );
+        } else {
+          showModalBottomSheet(
+            context: context,
+            builder: (context) => Container(
+              padding: const EdgeInsets.all(24),
+              child: const Text("User not found"),
+            ),
+          );
+        }
       } on FirebaseAuthException catch (e) {
         showModalBottomSheet(
           context: context,
           builder: (context) => Container(
             padding: const EdgeInsets.all(24),
-            child: Text(e.code),
+            child: Text(e.message ?? "An error occurred"),
           ),
         );
       }
@@ -83,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: _email,
                   keyboardType: TextInputType.emailAddress,
                   errorMessage: "Enter your email",
-                  hintText: "Enter your Email address",
+                  hintText: "Enter your email address",
                 ),
                 const SizedBox(
                   height: 10,
@@ -114,7 +126,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   onTap: widget.onTap,
                   child: const Text(
                     "Register",
-                    style: TextStyle(color: Colors.blue),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ],

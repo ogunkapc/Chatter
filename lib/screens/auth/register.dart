@@ -23,7 +23,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
 
   void register() {
-    final AuthService _authService = AuthService();
+    final AuthService authService = AuthService();
 
     final email = _email.text;
     final password = _password.text;
@@ -31,8 +31,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     if (_formKey.currentState!.validate()) {
       try {
-        _authService.registerWithEmailAndPassword(email, password, firstName);
-        
+        authService.registerWithEmailAndPassword(email, password, firstName);
+
         showModalBottomSheet(
           context: context,
           builder: (context) => Container(
@@ -58,8 +58,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Icon(
+          Icons.message,
+          size: 60,
+          color: Theme.of(context).colorScheme.primary,
+        ),
         const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 30),
+          padding: EdgeInsets.only(top: 30.0, bottom: 40),
           child: Center(
             child: Text(
               "Welcome! Create your account",
@@ -118,7 +123,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       onTap: widget.onTap,
                       child: const Text(
                         "Login",
-                        style: TextStyle(color: Colors.blue),
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],

@@ -25,6 +25,7 @@ class AuthService {
       _firestoreInstance.collection("Users").doc(userCredential.user!.uid).set({
         "uid": userCredential.user!.uid,
         "email": email,
+        "firstname": userCredential.user!.displayName,
       });
 
       return userCredential;
@@ -55,10 +56,13 @@ class AuthService {
       }
 
       // save user info in separate doc
-      _firestoreInstance.collection("Users").doc(userCredential.user!.uid).set({
-        "uid": userCredential.user!.uid,
-        "email": email,
-      });
+      _firestoreInstance.collection("Users").doc(userCredential.user!.uid).set(
+        {
+          "uid": userCredential.user!.uid,
+          "email": email,
+          "firstname": firstName,
+        },
+      );
 
       return userCredential;
     } on FirebaseAuthException catch (e) {

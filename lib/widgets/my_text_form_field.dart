@@ -33,37 +33,40 @@ class _MyTextFormFieldState extends State<MyTextFormField> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: widget.controller,
-      obscureText: obscureText,
-      autocorrect: false,
-      keyboardType: widget.keyboardType,
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return widget.errorMessage;
-        } else {
-          return null;
-        }
-      },
-      decoration: InputDecoration(
-        hintText: widget.hintText,
-        filled: true,
-        fillColor: Colors.red.shade50,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: TextFormField(
+        controller: widget.controller,
+        obscureText: obscureText,
+        autocorrect: false,
+        keyboardType: widget.keyboardType,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return widget.errorMessage;
+          } else {
+            return null;
+          }
+        },
+        decoration: InputDecoration(
+          hintText: widget.hintText,
+          filled: true,
+          fillColor: Colors.red.shade50,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          suffixIcon: widget.isPasswordField
+              ? GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      obscureText = !obscureText;
+                    });
+                  },
+                  child: Icon(obscureText
+                      ? CupertinoIcons.eye_slash_fill
+                      : CupertinoIcons.eye_fill),
+                )
+              : null,
         ),
-        suffixIcon: widget.isPasswordField
-            ? GestureDetector(
-                onTap: () {
-                  setState(() {
-                    obscureText = !obscureText;
-                  });
-                },
-                child: Icon(obscureText
-                    ? CupertinoIcons.eye_slash_fill
-                    : CupertinoIcons.eye_fill),
-              )
-            : null,
       ),
     );
   }
