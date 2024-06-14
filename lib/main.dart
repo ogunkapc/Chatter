@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: lightMode,
-      darkTheme: darkMode,
+      // darkTheme: darkMode,
       home: const AuthGate(),
     );
   }

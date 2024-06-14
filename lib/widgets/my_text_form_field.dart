@@ -6,14 +6,14 @@ class MyTextFormField extends StatefulWidget {
     super.key,
     required this.controller,
     this.keyboardType,
-    required this.errorMessage,
+    this.errorMessage,
     required this.hintText,
     this.isPasswordField = false,
   });
 
   final TextEditingController controller;
   final TextInputType? keyboardType;
-  final String errorMessage;
+  final String? errorMessage;
   final String hintText;
   final bool isPasswordField;
 
