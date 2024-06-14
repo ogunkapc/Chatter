@@ -80,6 +80,7 @@ class MessagesScreen extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => ChatScreen(
                 receivername: displayName,
+                receiverID: userData["uid"],
               ),
             ),
           );
