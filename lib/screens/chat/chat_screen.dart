@@ -1,7 +1,7 @@
 import 'package:chatter/services/auth/auth_service.dart';
 import 'package:chatter/services/chat/chat_service.dart';
-import 'package:chatter/widgets/chat_bubble.dart';
-import 'package:chatter/widgets/my_text_form_field.dart';
+import 'package:chatter/util/widgets/chat_bubble.dart';
+import 'package:chatter/util/widgets/my_text_form_field.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -35,6 +35,8 @@ class ChatScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(receivername),
+        centerTitle: true,
+        elevation: 0,
       ),
       body: Column(
         children: [

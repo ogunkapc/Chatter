@@ -1,6 +1,6 @@
 import 'package:chatter/services/auth/auth_service.dart';
-import 'package:chatter/widgets/custom_button.dart';
-import 'package:chatter/widgets/my_text_form_field.dart';
+import 'package:chatter/util/widgets/custom_button.dart';
+import 'package:chatter/util/widgets/my_text_form_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 

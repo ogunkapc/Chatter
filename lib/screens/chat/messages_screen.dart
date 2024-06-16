@@ -1,7 +1,10 @@
 import 'package:chatter/screens/chat/chat_screen.dart';
+import 'package:chatter/screens/settings.dart';
 import 'package:chatter/services/auth/auth_service.dart';
 import 'package:chatter/services/chat/chat_service.dart';
-import 'package:chatter/widgets/user_tile.dart';
+import 'package:chatter/util/menu_action.dart';
+import 'package:chatter/util/show_logout_dialog.dart';
+import 'package:chatter/util/widgets/user_tile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -25,18 +28,46 @@ class MessagesScreen extends StatelessWidget {
         : 'User';
 
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        title: Row(
-          children: [
-            const CircleAvatar(),
-            const SizedBox(
-              width: 10,
-            ),
-            Text("$displayName's Chats")
-          ],
-        ),
+        title: Text("$displayName's Chats"),
+        centerTitle: true,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
         actions: [
-          IconButton(onPressed: logout, icon: const Icon(Icons.logout)),
+          // IconButton(onPressed: logout, icon: const Icon(Icons.logout)),
+          PopupMenuButton<MenuAction>(
+              // color: Colors.white,
+              onSelected: (value) async {
+            switch (value) {
+              case MenuAction.settings:
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SettingsScreen(),
+                  ),
+                );
+                break;
+              case MenuAction.logout:
+                final shouldLogout = await showLogOutDialog(context);
+                if (shouldLogout) {
+                  logout();
+                }
+                break;
+              default:
+            }
+          }, itemBuilder: (value) {
+            return [
+              const PopupMenuItem<MenuAction>(
+                value: MenuAction.settings,
+                child: Text("Settings"),
+              ),
+              const PopupMenuItem<MenuAction>(
+                value: MenuAction.logout,
+                child: Text("Log out"),
+              )
+            ];
+          })
         ],
       ),
       body: _buildUserList(),
