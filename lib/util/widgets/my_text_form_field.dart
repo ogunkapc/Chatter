@@ -9,6 +9,7 @@ class MyTextFormField extends StatefulWidget {
     this.errorMessage,
     required this.hintText,
     this.isPasswordField = false,
+    this.focusNode,
   });
 
   final TextEditingController controller;
@@ -16,6 +17,7 @@ class MyTextFormField extends StatefulWidget {
   final String? errorMessage;
   final String hintText;
   final bool isPasswordField;
+  final FocusNode? focusNode;
 
   @override
   State<MyTextFormField> createState() => _MyTextFormFieldState();
@@ -37,6 +39,7 @@ class _MyTextFormFieldState extends State<MyTextFormField> {
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: TextFormField(
         controller: widget.controller,
+        focusNode: widget.focusNode,
         obscureText: obscureText,
         autocorrect: false,
         keyboardType: widget.keyboardType,
